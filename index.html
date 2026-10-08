@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ivan Martinović</title>
+  <meta name="description" content="Ivan Martinović — PhD student at FER, University of Zagreb. Research, publications and teaching.">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+  <!-- bump ?v= after editing these files so browsers and caches fetch the new version -->
+  <link rel="stylesheet" href="style.css?v=4">
+  <script>
+    // apply the theme before first paint to avoid a flash
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("nb-theme"); } catch (e) {}
+      if (!t) t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+</head>
+<body>
+  <header class="chrome" id="chrome">
+    <div class="row row-tabs">
+      <div class="side-head"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+      <nav class="tabs" id="tabs" aria-label="Files"></nav>
+      <div class="row-right">
+        <button class="icon-btn" id="btn-theme" title="Toggle light/dark theme" aria-label="Toggle light/dark theme">
+          <svg class="i-moon" width="16" height="16" viewBox="0 0 16 16"><path d="M13.6 10.1A6 6 0 0 1 5.9 2.4a6 6 0 1 0 7.7 7.7z" fill="currentColor"/></svg>
+          <svg class="i-sun" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="row row-tools">
+      <div class="side-head side-label">Explorer</div>
+      <div class="toolbar" role="toolbar" aria-label="Notebook">
+        <button class="icon-btn" id="btn-run" title="Run cell and advance (Shift+Enter)" aria-label="Run cell and advance">
+          <svg width="16" height="16" viewBox="0 0 16 16"><path d="M5 3.5v9l7.5-4.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="btn-stop" title="Interrupt the kernel" aria-label="Interrupt">
+          <svg width="16" height="16" viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" rx="1.2" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="btn-restart" title="Restart the kernel" aria-label="Restart the kernel">
+          <svg width="16" height="16" viewBox="0 0 16 16"><path d="M13 8a5 5 0 1 1-1.46-3.54M12.5 2.5v2.6H9.9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn" id="btn-runall" title="Run all cells" aria-label="Run all cells">
+          <svg width="16" height="16" viewBox="0 0 16 16"><path d="M2.5 3.5v9L8 8zM8.5 3.5v9L14 8z" fill="currentColor"/></svg>
+        </button>
+        <span class="celltype" aria-hidden="true">Code <svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 3.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></span>
+        <span class="spacer"></span>
+        <span class="kernel" id="kernel" title="Kernel status"><span class="kname">Python 3 (ipykernel)</span> <i class="kdot" aria-hidden="true"></i></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="Sections">
+      <div class="folder" id="folder"></div>
+      <ul class="files" id="files"></ul>
+      <div class="side-foot" id="side-foot"></div>
+    </aside>
+    <main class="notebook" id="notebook">
+      <noscript>
+        <p>This site renders as a notebook with JavaScript. Please enable it — or reach me at <a href="mailto:ivan.martinovic@fer.hr">ivan.martinovic@fer.hr</a>.</p>
+      </noscript>
+    </main>
+  </div>
+
+  <footer class="statusbar" id="statusbar">
+    <span class="sb-kernel"><i class="kdot" aria-hidden="true"></i> Python 3 | <b id="kstat">Idle</b></span>
+    <span class="sb-hide">Mode: Command</span>
+    <span class="spacer"></span>
+    <span class="sb-hide sb-keys">Shift+Enter run · J/K move</span>
+    <span id="sb-cell">Cell 1 of 1</span>
+    <span class="sb-hide">UTF-8</span>
+  </footer>
+
+  <script src="content.js?v=4"></script>
+  <script src="app.js?v=4"></script>
+</body>
+</html>

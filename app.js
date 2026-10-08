@@ -93,7 +93,7 @@
   });
 
   defs.push({
-    id: "about", kind: "code", file: "about.py", ext: "py", result: true,
+    id: "about", kind: "code", title: "About", file: "about.py", ext: "py", result: true,
     code: () => {
       const ints = S.interests.map(pyStr);
       const intsCode = ints.join(", ").length < 46 ? `[${ints.join(", ")}]` : `[\n        ${ints.join(",\n        ")},\n    ]`;
@@ -109,7 +109,7 @@
   });
 
   if (S.news && S.news.length) defs.push({
-    id: "news", kind: "code", file: "news.csv", ext: "csv", result: true, init: { all: false },
+    id: "news", kind: "code", title: "News", file: "news.csv", ext: "csv", result: true, init: { all: false },
     code: st => `import pandas as pd\n\nnews = pd.read_csv("news.csv", parse_dates=["date"])\n${st.all ? "news" : `news.head(${S.newsShown})`}`,
     render: st => {
       const rows = st.all ? S.news : S.news.slice(0, S.newsShown);
@@ -125,7 +125,7 @@
   // the selected/all toggle only appears once some paper is marked selected: true
   const hasSelected = (S.publications || []).some(p => p.selected);
   if (S.publications && S.publications.length) defs.push({
-    id: "publications", kind: "code", file: "papers.bib", ext: "bib", result: true, init: { all: !hasSelected },
+    id: "publications", kind: "code", title: "Publications", file: "papers.bib", ext: "bib", result: true, init: { all: !hasSelected },
     code: st => `papers = load_bib("papers.bib")\n${st.all ? `papers.sort_values("year", ascending=False)` : `papers.filter(selected=True)`}`,
     render: st => {
       const all = S.publications;
@@ -165,7 +165,7 @@
   });
 
   if (S.teaching && S.teaching.length) defs.push({
-    id: "teaching", kind: "code", file: "teaching.py", ext: "py",
+    id: "teaching", kind: "code", title: "Teaching", file: "teaching.py", ext: "py",
     code: () => `for course in teaching:\n    print(f"{course.term:<9} {course.name:<28} {course.role}")`,
     render: () => `<div class="stdout">${S.teaching.map(t => `<div class="line">
           <span class="term">${esc(t.term)}</span>
@@ -175,7 +175,7 @@
   });
 
   defs.push({
-    id: "contact", kind: "code", file: "contact.json", ext: "json", result: true,
+    id: "contact", kind: "code", title: "Contact", file: "contact.json", ext: "json", result: true,
     code: () => `me.contact`,
     render: () => {
       const entries = linkEntries().filter(([k]) => k !== "cv").map(([k, v]) => [k, ext(href(k, v), esc(pretty(v)))]);
@@ -187,7 +187,13 @@
 
   defs.push({ id: "end", kind: "empty", comment: S.endComment || "" });
 
-  const NB = [{ key: "main", file: S.notebook, title: S.name, defs }];
+  // a "## Title" markdown cell above every titled code cell; it takes over the section id
+  const withHeadings = list => list.flatMap(d => !d.title ? [d] : [
+    { id: d.id, section: d.id, kind: "markdown", heading: true, src: () => `## ${d.title}`, html: () => `<h2>${esc(d.title)}</h2>` },
+    { ...d, id: `${d.id}-code`, section: d.id },
+  ]);
+
+  const NB = [{ key: "main", file: S.notebook, title: S.name, defs: withHeadings(defs) }];
 
   // ── cv.ipynb ──────────────────────────────────────────────────────────────
   const cvEntries = list => `<div class="cv-list">${list.map(e => `<article class="cv-entry">
@@ -208,17 +214,17 @@
         ${S.cv.updated ? `<p class="hint">Last updated ${esc(S.cv.updated)}.</p>` : ""}`,
     }];
     if (S.cv.education && S.cv.education.length) cvDefs.push({
-      id: "cv-education", kind: "code", file: "education.yaml", ext: "yaml", result: true,
+      id: "cv-education", kind: "code", title: "Education", file: "education.yaml", ext: "yaml", result: true,
       code: () => `from cv import CV\n\ncv = CV.from_yaml("cv.yaml")\ncv.education`,
       render: () => cvEntries(S.cv.education),
     });
     if (S.cv.experience && S.cv.experience.length) cvDefs.push({
-      id: "cv-experience", kind: "code", file: "experience.yaml", ext: "yaml", result: true,
+      id: "cv-experience", kind: "code", title: "Experience", file: "experience.yaml", ext: "yaml", result: true,
       code: () => `cv.experience`,
       render: () => cvEntries(S.cv.experience),
     });
     if (S.publications && S.publications.length) cvDefs.push({
-      id: "cv-publications", kind: "code", file: "papers.bib", ext: "bib", result: true,
+      id: "cv-publications", kind: "code", title: "Publications", file: "papers.bib", ext: "bib", result: true,
       code: () => `cv.publications = load_bib("papers.bib")\ncv.publications.sort_values("year", ascending=False)`,
       render: () => `<ol class="cv-pubs" reversed>${[...S.publications].sort((a, b) => b.year - a.year).map(p => {
         const l = p.links || {};
@@ -227,7 +233,7 @@
       }).join("")}</ol>${S.publications.some(p => p.authors.some(a => a.includes("*"))) ? `<div class="df-foot">* equal contribution</div>` : ""}`,
     });
     if (S.cv.awards && S.cv.awards.length) cvDefs.push({
-      id: "cv-awards", kind: "code", file: "awards.csv", ext: "csv", result: true,
+      id: "cv-awards", kind: "code", title: "Awards", file: "awards.csv", ext: "csv", result: true,
       code: () => `cv.awards.sort_values("date", ascending=False)`,
       render: () => `<div class="df-wrap"><table class="df">
           <thead><tr><th></th><th>date</th><th>award</th></tr></thead>
@@ -235,7 +241,7 @@
         </table></div>`,
     });
     cvDefs.push({ id: "cv-end", kind: "empty", comment: S.cv.hobbies ? `# hobbies: ${S.cv.hobbies}` : "" });
-    NB.push({ key: "cv", file: "cv.ipynb", title: `CV · ${S.name}`, defs: cvDefs });
+    NB.push({ key: "cv", file: "cv.ipynb", title: `CV · ${S.name}`, defs: withHeadings(cvDefs) });
   }
 
   // ── build DOM ─────────────────────────────────────────────────────────────
@@ -254,7 +260,7 @@
     nb.execCount = 0;
     for (const def of nb.defs) {
       const el = document.createElement("section");
-      el.className = `cell ${def.kind}-cell`;
+      el.className = `cell ${def.kind}-cell${def.heading ? " heading-cell" : ""}`;
       el.id = def.id;
       const c = { def, el, nb, st: { ...(def.init || {}) }, state: "idle", shown: "" };
 
@@ -297,7 +303,7 @@
       (pdfLink ? `<a class="tab" href="${esc(pdfLink)}" target="_blank" rel="noopener"><span class="ext" data-ext="pdf">pdf</span>cv.pdf</a>` : "");
     $("#files").innerHTML = NB.map(nb => `<li><a class="file nbfile${nb === current ? " open" : ""}" href="#${nb.cells[0].def.id}"><span class="ext" data-ext="ipynb">nb</span>${esc(nb.file)}</a></li>` +
       (nb !== current ? "" : nb.cells.filter(c => c.def.file).map(c =>
-        `<li><a class="file sub" href="#${c.def.id}" data-target="${c.def.id}"><span class="ext" data-ext="${c.def.ext}">${c.def.ext}</span>${c.def.file}</a></li>`).join(""))).join("") +
+        `<li><a class="file sub" href="#${c.def.section || c.def.id}" data-target="${c.def.section || c.def.id}"><span class="ext" data-ext="${c.def.ext}">${c.def.ext}</span>${c.def.file}</a></li>`).join(""))).join("") +
       (pdfLink ? `<li><a class="file nbfile" href="${esc(pdfLink)}" target="_blank" rel="noopener"><span class="ext" data-ext="pdf">pdf</span>cv.pdf</a></li>` : "");
   }
   $("#folder").textContent = "▾ " + S.notebook.replace(/\.ipynb$/, "");
@@ -427,7 +433,7 @@
     if (active) active.el.classList.remove("active");
     active = c;
     c.el.classList.add("active");
-    document.querySelectorAll(".file[data-target]").forEach(f => f.classList.toggle("active", f.dataset.target === c.def.id));
+    document.querySelectorAll(".file[data-target]").forEach(f => f.classList.toggle("active", f.dataset.target === (c.def.section || c.def.id)));
     $("#sb-cell").textContent = `Cell ${current.cells.indexOf(c) + 1} of ${current.cells.length}`;
   }
   function updateActive() {

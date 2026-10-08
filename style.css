@@ -245,6 +245,12 @@ body[data-kernel="restarting"] .kdot { background: var(--accent); border-color: 
 }
 .md-body .tagline { margin: 0; font-size: 17px; color: var(--text-2); }
 .md-body .hint { margin: 14px 0 0; font-size: 13.5px; color: var(--muted); font-style: italic; }
+.md-body h2 {
+  margin: 0; padding-bottom: 8px; font-size: 25px; line-height: 1.2;
+  font-weight: 650; letter-spacing: -.015em; border-bottom: 1px solid var(--border);
+}
+.heading-cell { margin: 34px 0 2px; }
+.heading-cell .md-body { padding-top: 0; }
 .md-src { grid-column: 2; }
 .markdown-cell { cursor: default; }
 
@@ -262,12 +268,14 @@ body[data-kernel="restarting"] .kdot { background: var(--accent); border-color: 
 .about-text p a { font-weight: 500; }
 .about-text p b { color: var(--text); font-weight: 600; }
 .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-.pill {
-  font: 12.5px var(--mono); padding: 5px 11px; color: var(--text);
-  border: 1px solid var(--border-strong); border-radius: 7px; transition: border-color .15s, color .15s;
+.pill, .btn {
+  color: var(--link); background: color-mix(in srgb, var(--link) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--link) 30%, var(--border));
+  transition: background .15s, border-color .15s;
 }
-.pill span { color: var(--muted); }
-.pill:hover { text-decoration: none; border-color: var(--accent); color: var(--accent); }
+.pill:hover, .btn:hover { text-decoration: none; background: color-mix(in srgb, var(--link) 16%, transparent); border-color: var(--link); }
+.pill { font: 500 12.5px var(--mono); padding: 5px 11px; border-radius: 7px; }
+.pill span { opacity: .7; }
 
 /* dataframe */
 .df-wrap { overflow-x: auto; }
@@ -310,12 +318,7 @@ table.df { border-collapse: collapse; font-size: 14.5px; width: 100%; }
 .pub-meta { font-size: 13.5px; color: var(--muted); font-style: italic; }
 .pub-meta .eq { font-style: normal; font-size: 12.5px; }
 .pub-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
-.btn {
-  font: 12px/1 var(--mono); padding: 5px 9px; cursor: pointer;
-  background: transparent; color: var(--text-2);
-  border: 1px solid var(--border-strong); border-radius: 6px;
-}
-.btn:hover { border-color: var(--link); color: var(--link); text-decoration: none; }
+.btn { font: 500 12px/1 var(--mono); padding: 5px 9px; cursor: pointer; border-radius: 6px; }
 .btn.on { background: var(--sel); border-color: var(--active); color: var(--text); }
 .pub-abs {
   margin-top: 10px; padding: 10px 14px; font-size: 14px; line-height: 1.65; color: var(--text-2);
@@ -397,6 +400,8 @@ table.df { border-collapse: collapse; font-size: 14.5px; width: 100%; }
   .prompt { text-align: left; padding: 0; font-size: 11.5px; }
   .prompt:empty { display: none; }
   .output, .md-body, .md-src, .prompt-out { grid-column: 1; }
+  .heading-cell { margin-top: 26px; }
+  .md-body h2 { font-size: 22px; }
   .prompt-out { padding-top: 4px; }
   .editor pre { font-size: 12.5px; padding: 10px 12px; }
   /* phones: photo floats right, the bio wraps beside it and continues below */

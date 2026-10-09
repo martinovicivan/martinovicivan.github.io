@@ -251,6 +251,7 @@ body[data-kernel="restarting"] .kdot { background: var(--accent); border-color: 
 }
 .heading-cell { margin: 34px 0 2px; }
 .heading-cell .md-body { padding-top: 0; }
+.md-body .md-actions { margin: 14px 0 0; }
 .md-src { grid-column: 2; }
 .markdown-cell { cursor: default; }
 

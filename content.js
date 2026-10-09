@@ -33,8 +33,9 @@ window.SITE = {
     scholar: "https://scholar.google.com/citations?user=sQqOCocAAAAJ",
     github: "https://github.com/martinovicivan",
     linkedin: "https://www.linkedin.com/in/ivan-martinovi%C4%87-895a28343/",
-    cv: "#cv", // opens cv.ipynb; set to "assets/cv.pdf" once there is a PDF
+    cv: "#cv", // opens cv.ipynb
   },
+  cvPdf: "assets/Ivan_Martinovic_CV.pdf", // built from cv/cv.tex (cd cv && make); "download as PDF" button in cv.ipynb
   office: "Unska 3, 10000 Zagreb, Croatia",
 
   // ── news ──────────────────────────────────────────────────────────────────

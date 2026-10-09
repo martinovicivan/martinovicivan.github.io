@@ -103,7 +103,7 @@
         <div class="about-photo">${S.photo ? `<img src="${esc(S.photo)}" alt="Photo of ${esc(S.name)}">` : `<div class="avatar">${esc(initials)}</div>`}</div>
         <div class="about-text">
           ${S.bio.map(p => `<p>${p}</p>`).join("")}
-          <div class="pills">${linkEntries().map(([k, v]) => `<a class="pill" href="${esc(href(k, v))}"${/^https?:/.test(v) ? ' target="_blank" rel="noopener"' : ""}>${esc(k)} <span aria-hidden="true">${v.startsWith("#") ? "→" : "↗"}</span></a>`).join("")}</div>
+          <div class="pills">${linkEntries().map(([k, v]) => `<a class="pill" href="${esc(href(k, v))}"${/^https?:/.test(v) ? ' target="_blank" rel="noopener"' : ""}>${esc(k)} <span aria-hidden="true">${v.startsWith("#") ? "→" : "↗"}</span></a>`).join("")}${S.cvPdf ? `<a class="pill" href="${esc(S.cvPdf)}" target="_blank" rel="noopener">cv.pdf <span aria-hidden="true">↓</span></a>` : ""}</div>
         </div>
       </div>`,
   });
@@ -211,7 +211,8 @@
       src: () => `# Curriculum Vitae\n**${S.name}** · ${S.position} · ${S.affiliationShort}${S.cv.updated ? `\n\n*Last updated ${S.cv.updated}.*` : ""}`,
       html: () => `<h1>Curriculum Vitae</h1>
         <p class="tagline"><b>${esc(S.name)}</b> · ${esc(S.position)} · ${esc(S.affiliationShort)}</p>
-        ${S.cv.updated ? `<p class="hint">Last updated ${esc(S.cv.updated)}.</p>` : ""}`,
+        ${S.cv.updated ? `<p class="hint">Last updated ${esc(S.cv.updated)}.</p>` : ""}
+        ${S.cvPdf ? `<p class="md-actions"><a class="btn" href="${esc(S.cvPdf)}" download>download as PDF ↓</a></p>` : ""}`,
     }];
     if (S.cv.education && S.cv.education.length) cvDefs.push({
       id: "cv-education", kind: "code", title: "Education", file: "education.yaml", ext: "yaml", result: true,
